@@ -1,4 +1,5 @@
-#include "memory.h"
+#include "include/memory.h"
+#include "include/common.h"
 char *img_file_path = nullptr;
 
 uint8_t pmem[MSIZE] = {
@@ -35,17 +36,20 @@ uint8_t pmem[MSIZE] = {
 };
 
 uint8_t* addr_vtoc(uint32_t vaddr) {
-  printf("vaddr: 0x%08x\n", vaddr);
+  //printf("vaddr: 0x%08x\n", vaddr);
   return pmem + (vaddr - MEM_BASE);
 }
 
-extern "C" uint32_t pmem_read(uint32_t vaddr) {
+extern "C" int pmem_read(int raddr) {
   uint32_t rdata=0;
-  uint8_t *paddr = addr_vtoc(vaddr);
-  printf("vaddr: 0x%08x, paddr: %p  \n", vaddr, paddr);
-
+  uint8_t *paddr = addr_vtoc(raddr);
+  #ifdef MEM_TRACE
+  printf("raddr: 0x%08x, paddr: %p  \n", raddr, paddr);
+  #endif
   if (paddr < pmem || paddr + 4 > pmem + MSIZE) {
-    printf("pmem_read out of bound vaddr: 0x%08x\n", vaddr);
+    #ifdef MEM_TRACE
+    printf("pmem_read out of bound raddr: 0x%08x\n", raddr);
+    #endif
     return 0x7f7f7f7f;
   }
   for (uint8_t i = 0; i < 4; i++) {
@@ -55,13 +59,17 @@ extern "C" uint32_t pmem_read(uint32_t vaddr) {
   return rdata;
 }
 
-extern "C" void pmem_write(uint32_t *pmem, uint32_t vaddr, uint8_t len) {
-  uint32_t wdata = *pmem;
-  uint8_t *paddr = addr_vtoc(vaddr);
-  for (uint8_t i = 0; i < len; i++) {
-    *(paddr + i) = (wdata >> (i * 8)) & 0xff;
-  }
-  return;
+extern "C" void pmem_write(int waddr, int wdata, char wmask) {
+    uint8_t *host_ptr = addr_vtoc((uint32_t)waddr);
+    #ifdef MEM_TRACE
+    printf("waddr: 0x%08x, paddr: %p, wdata: 0x%08x, wmask: 0x%02x\n", waddr, host_ptr, wdata, (unsigned char)wmask);
+    #endif
+    for (int i = 0; i < 4; i++) {
+        if ((wmask >> i) & 0x01) {
+            // 4. 写入数据
+            host_ptr[i] = (uint8_t)((wdata >> (i * 8)) & 0xff);
+        }
+    }
 }
 
 long load_img(const char *img_file_path, uint8_t *pmem) {

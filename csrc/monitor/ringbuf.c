@@ -1,4 +1,4 @@
-#include "ringbuf.h"
+#include "../include/ringbuf.h"
 
 char itrace_buf[BUF_NUM][BUF_LENTH];
 int head_ptr=0;

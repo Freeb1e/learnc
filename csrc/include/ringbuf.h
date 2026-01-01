@@ -1,8 +1,5 @@
-#include <cpu/cpu.h>
-#include <cpu/decode.h>
-#include <cpu/difftest.h>
 #include <locale.h>
-
+#include <stdio.h>
 #define BUF_NUM 10
 #define BUF_LENTH 128
 extern char itrace_buf[BUF_NUM][BUF_LENTH];

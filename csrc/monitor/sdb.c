@@ -15,7 +15,8 @@
 
 #include <readline/readline.h>
 #include <readline/history.h>
-#include "./common.h"
+#include "../include/common.h"
+#include "../include/cpu-exec.h"
 static int is_batch_mode = false;
 
 void init_regex();
@@ -44,12 +45,13 @@ static char *rl_gets()
 
 static int cmd_c(char *args)
 {
-//   cpu_exec(-1);
+   cpu_exec(-1);
   return 0;
 }
 
 static int cmd_q(char *args)
 {
+  stopsim();
   return -1;
 }
 
@@ -57,36 +59,37 @@ static int cmd_help(char *args);
 
 static int cmd_si(char *args)
 {
-    printf("si command received\n");
-//   int n;
-//   if (args == NULL)
-//     n = 1;
-//   else
-//     n = atoi(args);
-//   cpu_exec(n);
+   // printf("si command received\n");
+  int n;
+  if (args == NULL)
+    n = 1;
+  else
+    n = atoi(args);
+  cpu_exec(n);
   return 0;
 }
 
 static int cmd_info(char *args)
 {
-//   if (args == NULL)
-//   {
-//     //printf("Please specify 'r' for registers or 'w' for watchpoints\n");
-//     printf("pc\t0x%08x\n", cpu.pc);
-//   }
-//   if (strcmp(args, "r") == 0)
-//   {
-//     isa_reg_display();
-//   }
-//   else if (strcmp(args, "w") == 0)
-//   {
-//     // wp_display();
-//     TODO();
-//   }
-//   else
-//   {
-//     printf("Unknown argument '%s'\n", args);
-//   }
+  if (args == NULL)
+  {
+    //printf("Please specify 'r' for registers or 'w' for watchpoints\n");
+    printf("pc\t0x%08x\n", read_pc());
+    return 0;
+  } 
+  else if (strcmp(args, "r") == 0)
+  {
+    isa_reg_display();
+  }
+  else if (strcmp(args, "w") == 0)
+  {
+    // wp_display();
+    TODO();
+  }
+  else
+  {
+    printf("Unknown argument '%s'\n", args);
+  }
   return 0;
 }
 

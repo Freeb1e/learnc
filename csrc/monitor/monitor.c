@@ -1,11 +1,11 @@
-#include "memory.h"
+#include "../include/memory.h"
+#include "../include/monitor.h"
+#include "../include/common.h"
 
-void init_log(const char *log_file);
-void init_mem();
-void init_difftest(char *ref_so_file, long img_size, int port);
-void init_device();
-void init_sdb();
-void init_disasm();
+FILE *log_fp = NULL;
+
+void assert_fail_msg() {
+}
 
 static void welcome() {
   Log("Trace: %s", MUXDEF(CONFIG_TRACE, ANSI_FMT("ON", ANSI_FG_GREEN), ANSI_FMT("OFF", ANSI_FG_RED)));
@@ -22,9 +22,9 @@ static void welcome() {
 void sdb_set_batch_mode();
 
 void init_monitor(int argc, char *argv[]) {
-  long img_size = load_img();
+ // long img_size = load_img();
 
-  init_sdb();
+  //init_sdb();
 
   //IFDEF(CONFIG_ITRACE, init_disasm());
 
@@ -33,6 +33,6 @@ void init_monitor(int argc, char *argv[]) {
 
 
 void am_init_monitor() {
-  load_img();
+  //load_img();
   welcome();
 }

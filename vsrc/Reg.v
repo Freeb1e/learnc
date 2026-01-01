@@ -1,4 +1,3 @@
-// 触发器模板
 module Reg #(WIDTH = 1, RESET_VAL = 0) (
   input clk,
   input rst,

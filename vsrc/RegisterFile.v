@@ -25,10 +25,9 @@ module RegisterFile #(ADDR_WIDTH = 5, DATA_WIDTH = 32) (
     assign rdata1 = (ren&(raddr1!=0)) ? rf[raddr1] : 0;
     assign rdata2 = (ren&(raddr2!=0)) ? rf[raddr2] : 0;
 
-    // export "DPI-C" function get_reg;
-    // function void get_reg(int addr);
-    //     output int reg_data;
-    //     reg_data = addr == 0 ? 32'b0 : rf[addr];
-    // endfunction
+    export "DPI-C" function get_reg;
 
+    function void get_reg(input int addr, output int reg_data);
+        reg_data = (addr == 0) ? 32'b0 : rf[addr];
+    endfunction
 endmodule
