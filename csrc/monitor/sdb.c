@@ -51,6 +51,11 @@ static int cmd_c(char *args)
 
 static int cmd_q(char *args)
 {
+    half_cycle();half_cycle();
+    half_cycle();half_cycle();
+    half_cycle();half_cycle();
+    half_cycle();half_cycle();
+    half_cycle();half_cycle();
   stopsim();
   return -1;
 }
@@ -85,6 +90,9 @@ static int cmd_info(char *args)
   {
     // wp_display();
     TODO();
+  }else if(strcmp(args, "ref") == 0)
+  {
+    print_reg_CPU_state(&nemu_regs);
   }
   else
   {

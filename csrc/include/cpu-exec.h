@@ -12,4 +12,7 @@ extern const char *regs[];
 void cpu_exec(uint64_t n);
 extern void init_dpi_scope();
 extern void half_cycle();
+
+extern void print_reg_CPU_state(CPU_state_npc *state);
+
 #define PER_INSTR_LOG_SIZE 128

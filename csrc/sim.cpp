@@ -4,6 +4,7 @@
 #include "include/cpu-exec.h"
 #include "tools/tools.h"
 #include "include/ringbuf.h"
+#include "difftest/difftest.h"
 Vnpc *dut = nullptr;
 VerilatedVcdC *m_trace = nullptr;
 vluint64_t sim_time = 0;
@@ -11,7 +12,7 @@ vluint64_t sim_time = 0;
 #ifndef NPC_HOME
 #define NPC_HOME "."
 #endif
-
+bool abort_sign = false;
 void waveinit() {
     dut = new Vnpc;
     Verilated::traceEverOn(true);
@@ -28,7 +29,8 @@ void waveinit() {
 void stopsim() {
     m_trace->close();
     delete dut;
-    exit(EXIT_SUCCESS);
+    if(abort_sign) exit(EXIT_FAILURE);
+    else exit(EXIT_SUCCESS);
 }
 
 
@@ -53,8 +55,11 @@ int main(int argc, char** argv, char** env) {
     init_disasm();
     ringbuf_init();
 #endif
+    abort_sign = false;
     //加载镜像文件到内存
     load_img(img_file_path, pmem);
+    
+    init_difftest(NPC_HOME "/csrc/difftest/build/riscv32-nemu-interpreter-so", MSIZE, 0);
 
     init_monitor(argc, argv);
 
