@@ -13,7 +13,7 @@ TOOLS_MAKEFILE = csrc/tools.mk
 include $(TOOLS_MAKEFILE)
 build:
 # 	clear
-	verilator --trace -cc $(VERILOG) --exe $(CSOURCE) --top-module $(TOP_NAME) -Mdir obj_dir -Ivsrc -LDFLAGS "-lreadline" -CFLAGS "-I$(abspath $(CAPSTONE_INCLUDE)) $(TOOLS_CTRL)"
+	verilator --trace -cc $(VERILOG) --exe $(CSOURCE) --top-module $(TOP_NAME) -Mdir obj_dir -Ivsrc -LDFLAGS "-lreadline" -CFLAGS "-I$(abspath $(CAPSTONE_INCLUDE)) $(TOOLS_CTRL) -DNPC_HOME=\\\"$(abspath .)\\\""
 	$(MAKE) -C obj_dir -f V$(TOP_NAME).mk V$(TOP_NAME)
 
 run: build

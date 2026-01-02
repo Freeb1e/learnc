@@ -31,9 +31,13 @@ static void (*cs_free_dl)(cs_insn *insn, size_t count);
 
 static csh handle;
 
+#ifndef NPC_HOME
+#define NPC_HOME "."
+#endif
+
 extern "C" void init_disasm() {
   void *dl_handle;
-  dl_handle = dlopen("csrc/tools/capstone/repo/libcapstone." CS_LIB_SUFFIX, RTLD_LAZY);
+  dl_handle = dlopen(NPC_HOME "/csrc/tools/capstone/repo/libcapstone." CS_LIB_SUFFIX, RTLD_LAZY);
   assert(dl_handle);
 
   cs_err (*cs_open_dl)(cs_arch arch, cs_mode mode, csh *handle) = NULL;
