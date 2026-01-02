@@ -1,13 +1,17 @@
 .PHONY: build run RUN clean
 VERILOG = $(wildcard vsrc/*.sv)
 VERILOG += $(wildcard vsrc/*.v)
-CSOURCE=$(shell find csrc -name "*.cpp")
-CSOURCE+=$(shell find csrc -name "*.c")
+CSOURCE=$(shell find csrc -name "*.cpp" -not -path "*/tools/capstone/repo/*")
+CSOURCE+=$(shell find csrc -name "*.c" -not -path "*/tools/capstone/repo/*")
+CSOURCE+=$(shell find csrc -name "*.cc" -not -path "*/tools/capstone/repo/*")
 TOP_NAME ?= npc
-
+CAPSTONE_INCLUDE = csrc/tools/capstone/repo/include
+TOOLS_MAKEFILE = csrc/tools.mk
+CONFIG_ITRACE = y
+include $(TOOLS_MAKEFILE)
 build:
 # 	clear
-	verilator --trace -cc $(VERILOG) --exe $(CSOURCE) -LDFLAGS "-lreadline" --top-module $(TOP_NAME) -Mdir obj_dir -Ivsrc
+	verilator --trace -cc $(VERILOG) --exe $(CSOURCE) -LDFLAGS "-lreadline" --top-module $(TOP_NAME) -Mdir obj_dir -Ivsrc -CFLAGS "-I$(abspath $(CAPSTONE_INCLUDE))"
 	$(MAKE) -C obj_dir -f V$(TOP_NAME).mk V$(TOP_NAME)
 
 run: build

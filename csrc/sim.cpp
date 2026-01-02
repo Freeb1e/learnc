@@ -2,6 +2,7 @@
 #include "include/memory.h"
 #include "include/monitor.h"
 #include "include/cpu-exec.h"
+#include "tools/tools.h"
 Vnpc *dut = nullptr;
 VerilatedVcdC *m_trace = nullptr;
 vluint64_t sim_time = 0;
@@ -30,6 +31,7 @@ void stopsim() {
 int main(int argc, char** argv, char** env) {
     waveinit();
     init_dpi_scope();
+    init_disasm();
     load_img(img_file_path, pmem);
     using std::cout;
     using std::endl;

@@ -1,5 +1,6 @@
 #include "include/cpu-exec.h"
 #include "include/common.h"
+#include "tools/tools.h"
 uint8_t npc_state = NPC_STOP;
 const char *regs[] = {
     "$0", "ra", "sp", "gp", "tp", "t0", "t1", "t2",
@@ -135,10 +136,10 @@ static void excute_once(uint64_t n)
     space_len = space_len * 3 + 1;
     memset(p, ' ', space_len);
     p += space_len;
-
-    void disassemble(char *str, int size, uint64_t pc, uint8_t *code, int nbyte);
-    disassemble(p, s->logbuf + sizeof(s->logbuf) - p,
-                MUXDEF(CONFIG_ISA_x86, s->snpc, s->pc), (uint8_t *)&s->isa.inst, ilen);
+    if(inst != 0){
+      void disassemble(char *str, int size, uint64_t pc, uint8_t *code, int nbyte);
+      disassemble(p, instr_logbuf + sizeof(instr_logbuf) - p, pc , (uint8_t *) &inst , ilen);
+    }   
     ringbuf_append(instr_logbuf);
 #endif
     trace_and_difftest(instr_logbuf, pc);
