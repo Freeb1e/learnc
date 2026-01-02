@@ -95,8 +95,8 @@ static int cmd_info(char *args)
 
 static int cmd_ring(char *args)
 {
-    // extern void ringbuf_print();
-    // ringbuf_print();
+    extern void ringbuf_print();
+    ringbuf_print();
     return 0;
 }
 

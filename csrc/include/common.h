@@ -38,6 +38,5 @@ extern void stopsim();
 
 #define TODO() panic("please implement me")
 
-
-//#define MEM_TRACE
-#define CONFIG_ITRACE
+#define CONFIG_ITRACE 1
+// #define CONFIG_MTRACE 1

@@ -71,6 +71,7 @@ extern "C" void ebreak()
 {
   npc_state = NPC_END;
   printf("\33[1;32mHit ebreak: Simulation requested stop!\33[0m\n");
+  exit(0);
 }
 
 void cpu_exec(uint64_t n)
@@ -101,7 +102,7 @@ void cpu_exec(uint64_t n)
     printf("NPC_ABORT\n");
     break;
   case NPC_END:
-    printf("NPC_END\n");
+    //printf("NPC_END\n");
     break;
   default:
     break;
@@ -110,7 +111,7 @@ void cpu_exec(uint64_t n)
 
 static void excute_once(uint64_t n)
 {
-  int pc, inst; // 用于接收数据
+  int pc, inst;
 
   for (; n > 0; n--)
   {
@@ -119,6 +120,7 @@ static void excute_once(uint64_t n)
 
     svSetScope(g_scope);
     get_pc_inst(&pc, &inst);
+    
 #ifdef CONFIG_ITRACE
     char *p = instr_logbuf;
     p += snprintf(p, sizeof(instr_logbuf), "0x%08x:", pc);
@@ -141,16 +143,16 @@ static void excute_once(uint64_t n)
       disassemble(p, instr_logbuf + sizeof(instr_logbuf) - p, pc , (uint8_t *) &inst , ilen);
     }   
     ringbuf_append(instr_logbuf);
-#endif
-    trace_and_difftest(instr_logbuf, pc);
-    
     if (npc_state != NPC_RUNNING) break;
+    trace_and_difftest(instr_logbuf, pc);
+#endif    
+    
   }
 }
 
 static void trace_and_difftest(char *logbuf, uint32_t dnpc) {
     if (g_print_step) {
-        puts(logbuf);
+        IFDEF(CONFIG_ITRACE, puts(logbuf));
     }
 }
 
@@ -168,15 +170,4 @@ void isa_reg_display()
   // get_pc_inst(&pc_val, &inst_val);
   // printf("%-4s 0x%08x   %d\n", "pc", pc_val, pc_val);
   printf("---------------------------------------------\n");
-}
-
-static void trace_and_difftest(char *logbuf[], uint32_t dnpc)
-{
-
-  if (g_print_step)
-  {
-    IFDEF(CONFIG_ITRACE, puts(logbuf));
-  }
-
-  // IFDEF(CONFIG_DIFFTEST, difftest_step(_this->pc, dnpc));
 }
